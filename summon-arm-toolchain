@@ -30,7 +30,7 @@ SUDO=
 # Set to 1 to be quieter while running
 QUIET=0
 # Set to 1 to use linaro gcc instead of the FSF gcc
-USE_LINARO=1
+USE_LINARO=0
 # Set to 1 to enable building of OpenOCD
 OOCD_EN=1
 # Set to 1 to build libstm32 provided by ST
@@ -116,7 +116,7 @@ echo "CPUS=$CPUS"
 ##############################################################################
 if [ ${USE_LINARO} == 0 ] ; then
 	# For FSF GCC:
-	GCCVERSION=4.5.2
+	GCCVERSION=4.6.0
 	GCC=gcc-${GCCVERSION}
 	GCCURL=http://ftp.gnu.org/gnu/gcc/${GCC}/${GCC}.tar.gz
 else
@@ -374,6 +374,8 @@ if [ ! -e ${STAMPS}/${GCC}-${NEWLIB}.build ]; then
     unpack ${GCC}
     unpack ${NEWLIB}
 
+    patch -p0 < patches/newlib.patch
+
     log "Adding newlib symlink to gcc"
     ln -f -s `pwd`/${NEWLIB}/newlib ${GCC}
     log "Adding libgloss symlink to gcc"
@@ -392,7 +394,7 @@ if [ ! -e ${STAMPS}/${GCC}-${NEWLIB}.build ]; then
 		      --prefix=${PREFIX} \
 		      --enable-interwork \
 		      --enable-multilib \
-		      --enable-languages="c,c++" \
+		      --enable-languages="c" \
 		      --with-newlib \
 		      --with-gnu-as \
 		      --with-gnu-ld \

@@ -1,0 +1,11 @@
+diff -ur newlib-1.19.0/newlib/libc/include/sys/types.h newlib-1.19.0.new/newlib/libc/include/sys/types.h
+--- newlib-1.19.0/newlib/libc/include/sys/types.h	2010-12-09 03:44:06.000000000 +1300
++++ newlib-1.19.0.new/newlib/libc/include/sys/types.h	2011-04-07 21:23:37.876628009 +1200
+@@ -123,6 +123,7 @@
+ #endif
+ 
+ typedef	long	daddr_t;
++#undef caddr_t
+ typedef	char *	caddr_t;
+ 
+ #ifndef __CYGWIN__
