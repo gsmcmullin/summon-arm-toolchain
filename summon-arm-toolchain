@@ -19,6 +19,8 @@ set -e
 # You probably want to customize those
 # You can also pass them as parameters to the script
 ##############################################################################
+# Cross-compile toolchain to run on HOST
+HOST=
 TARGET=arm-none-eabi		# Or: TARGET=arm-elf
 DESTDIR=""
 PREFIX=${HOME}/sat		# Install location of your final toolchain
@@ -46,6 +48,9 @@ CPUS=
 
 while [ $# -gt 0 ]; do
 	case $1 in
+		HOST=*)
+		HOST=$(echo $1 | sed 's,^HOST=,,')
+		;;
 		TARGET=*)
 		TARGET=$(echo $1 | sed 's,^TARGET=,,')
 		;;
@@ -92,6 +97,7 @@ while [ $# -gt 0 ]; do
 done
 
 echo "Settings used for this build are:"
+echo "HOST=$HOST"
 echo "TARGET=$TARGET"
 echo "DESTDIR=$DESTDIR"
 echo "PREFIX=$PREFIX"
@@ -148,15 +154,22 @@ fi
 
 echo "${CPUS} cpu's detected running make with '${PARALLEL}' flag"
 
-GDBFLAGS=
-BINUTILFLAGS=
+if [ "x${HOST}" != "x" ]; then
+	echo "HOST defined, attempting cross-compile!"
+	HOST_OPT=--host=${HOST}
+fi
+
+GDBFLAGS=${HOST_OPT}
+BINUTILFLAGS=${HOST_OPT}
 
 if [ ${DEFAULT_TO_CORTEX_M3} == 0 ] ; then
-	GCCFLAGS=
+	GCCFLAGS=${HOST_OPT}
 else
 	# To default to the Cortex-M3:
-	GCCFLAGS="--with-arch=armv7-m --with-mode=thumb --with-float=soft"
+	GCCFLAGS=${HOST_OPT} "--with-arch=armv7-m --with-mode=thumb --with-float=soft"
 fi
+
+OOCDFLAGS=${HOST_OPT}
 
 # Pull in the local configuration, if any
 if [ -f local.sh ]; then
@@ -443,6 +456,7 @@ if [ ! -e ${STAMPS}/openocd-${OOCD}.build ]; then
 				 --enable-vsllink \
 				 --enable-rlink \
 				 --enable-arm-jtag-ew
+				 ${OOCDFLAGS}
     log "Building openocd-${OOCD}"
     make ${MAKEFLAGS}
     install openocd-${OOCD} install
