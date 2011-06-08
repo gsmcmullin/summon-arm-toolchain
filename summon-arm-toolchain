@@ -356,7 +356,6 @@ if [ ! -e ${STAMPS}/${BINUTILS}.build ]; then
 			   --prefix=${PREFIX} \
 			   --enable-interwork \
 			   --enable-multilib \
-			   --enable-shared \
 			   --with-gnu-as \
 			   --with-gnu-ld \
 			   --disable-nls \
@@ -400,7 +399,6 @@ if [ ! -e ${STAMPS}/${GCC}-${NEWLIB}.build ]; then
 		      --with-gnu-as \
 		      --with-gnu-ld \
 		      --disable-nls \
-		      --enable-shared \
 		      --disable-threads \
 		      --disable-lto \
 		      --with-headers=newlib/libc/include \
@@ -411,6 +409,7 @@ if [ ! -e ${STAMPS}/${GCC}-${NEWLIB}.build ]; then
 		      --disable-werror \
 		      --with-system-zlib \
 		      --disable-newlib-supplied-syscalls \
+		      --enable-target-optspace \
 		      ${GCCFLAGS}
     log "Building ${GCC} and ${NEWLIB}"
     make ${MAKEFLAGS}
@@ -429,7 +428,6 @@ if [ ! -e ${STAMPS}/${GDB}.build ]; then
 		      --prefix=${PREFIX} \
 		      --enable-interwork \
 		      --enable-multilib \
-		      --enable-shared \
 		      --disable-nls \
 		      --disable-werror \
 		      ${GDBFLAGS}
