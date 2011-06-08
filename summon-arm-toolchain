@@ -356,6 +356,7 @@ if [ ! -e ${STAMPS}/${BINUTILS}.build ]; then
 			   --prefix=${PREFIX} \
 			   --enable-interwork \
 			   --enable-multilib \
+			   --enable-shared \
 			   --with-gnu-as \
 			   --with-gnu-ld \
 			   --disable-nls \
@@ -394,13 +395,14 @@ if [ ! -e ${STAMPS}/${GCC}-${NEWLIB}.build ]; then
 		      --prefix=${PREFIX} \
 		      --enable-interwork \
 		      --enable-multilib \
-		      --enable-languages="c" \
+		      --enable-languages="c,c++" \
 		      --with-newlib \
 		      --with-gnu-as \
 		      --with-gnu-ld \
 		      --disable-nls \
-		      --disable-shared \
+		      --enable-shared \
 		      --disable-threads \
+		      --disable-lto \
 		      --with-headers=newlib/libc/include \
 		      --disable-libssp \
 		      --disable-libstdcxx-pch \
@@ -427,6 +429,8 @@ if [ ! -e ${STAMPS}/${GDB}.build ]; then
 		      --prefix=${PREFIX} \
 		      --enable-interwork \
 		      --enable-multilib \
+		      --enable-shared \
+		      --disable-nls \
 		      --disable-werror \
 		      ${GDBFLAGS}
     log "Building ${GDB}"
